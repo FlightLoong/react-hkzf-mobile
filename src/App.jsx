@@ -21,8 +21,8 @@ function App() {
           </li>
         </ul>
 
-        <Route path="/home" component={CityList}></Route>
-        <Route path="/citylist" component={Home}></Route>
+        <Route path="/home" component={Home}></Route>
+        <Route path="/citylist" component={CityList}></Route>
 
       </div>
     </Router>

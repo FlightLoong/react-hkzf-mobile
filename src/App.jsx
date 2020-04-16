@@ -10,7 +10,13 @@ function App() {
   return (
     <Router>
       <div>
-        <Route exact path="/" render={() => <Redirect to="/home" />}></Route>
+
+        {/* 第一种：路由重定向的方式 */}
+        <Redirect from="/" to="/home" />
+
+        {/* 第二种：路由重定向的方式 */}
+        {/* <Route exact path="/" render={() => <Redirect to="/home" />}></Route> */}
+        
         <Route path="/home" component={Home}></Route>
         <Route path="/citylist" component={CityList}></Route>
       </div>

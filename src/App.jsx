@@ -10,20 +10,8 @@ function App() {
   return (
     <Router>
       <div>
-        <p>根组件</p>
-
-        <ul>
-          <li>
-            <Link to="/home">项目首页</Link>
-          </li>
-          <li>
-            <Link to="/citylist">城市列表</Link>
-          </li>
-        </ul>
-
         <Route path="/home" component={Home}></Route>
         <Route path="/citylist" component={CityList}></Route>
-
       </div>
     </Router>
   )

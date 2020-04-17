@@ -1,0 +1,10 @@
+.swipera {
+  display: inline-block;
+  width: 100%;
+  height: 212px;
+}
+
+.swiperimg {
+  width: 100%;
+  vertical-align: top;
+}

@@ -46,6 +46,14 @@ export default class Home extends React.Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.location.pathname !== this.props.location.pathname) {
+      this.setState({
+        selectedTab: this.props.location.pathname
+      })
+    }
+  }
+
   // 渲染 TabBar.Item
   renderTabBarItem() {
     return tabItems.map(item => (

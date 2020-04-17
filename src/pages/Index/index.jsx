@@ -46,14 +46,21 @@ const navs = [
 export default class Index extends React.Component {
   state = {
     // 轮播图状态数据
-    swipers: []
+    swipers: [],
+    IndexFlag: false
   }
 
   // 获取轮播图数据的方法
   async getSwipers() {
     const res = await axios.get('http://118.190.160.53:8009/home/swiper')
-    this.setState({
-      swipers: res.data.body
+    this.setState(() => {
+      return {
+        swipers: res.data.body
+      }
+    }, () => {
+      this.setState({
+        IndexFlag: true
+      })
     })
   }
 
@@ -98,9 +105,11 @@ export default class Index extends React.Component {
     return (
       <div className="index">
         {/* 轮播图 */}
-        <Carousel autoplay infinite autoplayInterval={5000}>
-          {this.renderSwipers()}
-        </Carousel>
+        <div className="swiper">
+          <Carousel autoplay infinite autoplay={this.state.IndexFlag} Interval={3000}>
+            {this.renderSwipers()}
+          </Carousel>
+        </div>
 
         {/* 导航菜单 */}
         <Flex className="nav">{this.renderNavs()}</Flex>

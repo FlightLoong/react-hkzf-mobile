@@ -1,10 +1,17 @@
-.swipera {
-  display: inline-block;
-  width: 100%;
-  height: 212px;
+.nav {
+  padding: 10px 0;
 }
 
-.swiperimg {
-  width: 100%;
-  vertical-align: top;
+.nav .am-flexbox-item {
+  text-align: center;
+}
+
+.nav img {
+  width: 48px;
+}
+
+.nav h2 {
+  margin-top: 7px;
+  font-size: 13px;
+  font-weight: normal;
 }

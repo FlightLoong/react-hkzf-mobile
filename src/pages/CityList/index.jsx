@@ -6,6 +6,9 @@ import { NavBar } from 'antd-mobile'
 // 导入 axios
 import axios from 'axios'
 
+// 导入 List 组件
+import { List } from 'react-virtualized'
+
 // 导入样式
 import './index.scss'
 
@@ -37,6 +40,26 @@ const formatCityData = list => {
     cityList,
     cityIndex
   }
+}
+
+// List data as an array of strings
+// 列表数据的数据源
+const list = Array(100).fill('react-virtualized')
+
+// 渲染每一行数据的渲染函数
+// 函数的返回值就表示最终渲染在页面中的内容
+function rowRenderer({
+  key, // Unique key within array of rows
+  index, // 索引
+  isScrolling, // 是否正在滚动中
+  isVisible, // 是否在可视区域可见
+  style, // 指定每一行的位置 重点属性，一定要参加
+}) {
+  return (
+    <div key={key} style={style}>
+      {list[index]}
+    </div>
+  );
 }
 
 export default class CityList extends React.Component {
@@ -76,6 +99,15 @@ export default class CityList extends React.Component {
         >
           城市选择
         </NavBar>
+
+        {/* 城市列表组件 */}
+        <List
+          width={300}
+          height={500}
+          rowCount={list.length}
+          rowHeight={50}
+          rowRenderer={rowRenderer}
+        />
       </div>
     )
   }

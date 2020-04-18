@@ -103,7 +103,6 @@ export default class Index extends React.Component {
       const cityName = res.name
       const { data: areares } = await axios.get(`http://118.190.160.53:8009/area/info?name=${cityName}`)
 
-      console.log(areares)
       this.setState(() => {
         return {
           curCityName: areares.body.label

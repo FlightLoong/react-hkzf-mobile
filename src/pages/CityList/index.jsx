@@ -9,6 +9,9 @@ import axios from 'axios'
 // 导入样式
 import './index.scss'
 
+// 导入 utils 中获取当前定位城市的方法
+import { getCurrentCity } from '../../utils'
+
 // 数据格式化方法
 const formatCityData = list => {
   const cityList = {}
@@ -52,7 +55,13 @@ export default class CityList extends React.Component {
     cityList['hot'] = hotRes.data.body
     cityIndex.unshift('hot')
 
-    console.log(cityList, cityIndex)
+    // 获取当前定位城市
+    const curCity = await getCurrentCity()
+
+    cityList['#'] = [curCity]
+    cityIndex.unshift('#')
+
+    console.log(cityList, cityIndex, curCity)
   }
 
   render() {

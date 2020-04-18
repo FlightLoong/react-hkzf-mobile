@@ -1,11 +1,20 @@
 html,
 body {
-  height: 100%;
+  margin: 0px;
+  padding: 0px;
   font-family: "Microsoft YaHei";
   color: #333;
   background-color: #fff;
 }
+
 * {
   box-sizing: border-box;
   touch-action: none;
+}
+
+html,
+body,
+#root,
+.App {
+  height: 100%;
 }

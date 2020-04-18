@@ -51,7 +51,8 @@ export default class Index extends React.Component {
     // 租房小组数据
     groups: [],
     // 最新资讯
-    news: []
+    news: [],
+    curCityName: ''
   }
 
   // 获取轮播图数据的方法
@@ -94,6 +95,21 @@ export default class Index extends React.Component {
     this.getSwipers()
     this.getGroups()
     this.getNews()
+
+    // 根据 IP 地址获取城市信息
+    const myCity = new window.BMap.LocalCity()
+
+    myCity.get(async (res) => {
+      const cityName = res.name
+      const { data: areares } = await axios.get(`http://118.190.160.53:8009/area/info?name=${cityName}`)
+
+      console.log(areares)
+      this.setState(() => {
+        return {
+          curCityName: areares.body.label
+        }
+      })
+    })
   }
 
   // 渲染轮播图结构
@@ -111,6 +127,7 @@ export default class Index extends React.Component {
         <img
           src={'http://118.190.160.53:8009' + item.imgSrc}
           style={{ width: '100%', verticalAlign: 'top' }}
+          alt=""
         />
       </a>
     ))
@@ -156,9 +173,9 @@ export default class Index extends React.Component {
       <div className="index">
         {/* 轮播图 */}
         <div className="swiper">
-          <Carousel infinite autoplay={this.state.IndexFlag} Interval={3000}>
+          {/* <Carousel infinite autoplay={this.state.IndexFlag} Interval={3000}>
             {this.renderSwipers()}
-          </Carousel>
+          </Carousel> */}
 
           {/* 搜索框 */}
           <Flex className="search-box">
@@ -169,7 +186,7 @@ export default class Index extends React.Component {
                 className="location"
                 onClick={() => this.props.history.push('/citylist')}
               >
-                <span className="name">上海</span>
+                <span className="name">{this.state.curCityName}</span>
                 <i className="iconfont icon-arrow" />
               </div>
 

@@ -46,6 +46,12 @@ export default class CityList extends React.Component {
     const { data: res } = await axios.get('http://118.190.160.53:8009/area/city?level=1')
 
     const { cityList, cityIndex } = formatCityData(res.body)
+
+    // 处理城市列表数据
+    const hotRes = await axios.get('http://118.190.160.53:8009/area/hot')
+    cityList['hot'] = hotRes.data.body
+    cityIndex.unshift('hot')
+
     console.log(cityList, cityIndex)
   }
 

@@ -7,7 +7,7 @@ import { NavBar } from 'antd-mobile'
 import axios from 'axios'
 
 // 导入 List 组件
-import { List } from 'react-virtualized'
+import { List, AutoSizer } from 'react-virtualized'
 
 // 导入样式
 import './index.scss'
@@ -42,27 +42,29 @@ const formatCityData = list => {
   }
 }
 
-// List data as an array of strings
-// 列表数据的数据源
-const list = Array(100).fill('react-virtualized')
+// 索引（A、B等）的高度
+const TITLE_HEIGHT = 36
+// 每个城市名称的高度
+const NAME_HEIGHT = 50
 
-// 渲染每一行数据的渲染函数
-// 函数的返回值就表示最终渲染在页面中的内容
-function rowRenderer({
-  key, // Unique key within array of rows
-  index, // 索引
-  isScrolling, // 是否正在滚动中
-  isVisible, // 是否在可视区域可见
-  style, // 指定每一行的位置 重点属性，一定要参加
-}) {
-  return (
-    <div key={key} style={style}>
-      {list[index]}
-    </div>
-  );
+// 封装处理字母索引的方法
+const formatCityIndex = letter => {
+  switch (letter) {
+    case '#':
+      return '当前定位'
+    case 'hot':
+      return '热门城市'
+    default:
+      return letter.toUpperCase()
+  }
 }
 
 export default class CityList extends React.Component {
+  state = {
+    cityList: {},
+    cityIndex: []
+  }
+
   componentDidMount() {
     this.getCityList()
   }
@@ -85,6 +87,45 @@ export default class CityList extends React.Component {
     cityIndex.unshift('#')
 
     console.log(cityList, cityIndex, curCity)
+    // 1. 将获取到的 cityList 和 cityIndex 添加为组件的状态数据
+    this.setState({
+      cityList,
+      cityIndex
+    })
+  }
+
+  // 将 rowRenderer 函数，添加到组件中，以便在函数中获取到状态数据 cityList 和 cityIndex
+  // 渲染每一行数据的渲染函数
+  // 函数的返回值就表示最终渲染在页面中的内容
+  rowRenderer = ({
+    key, // Unique key within array of rows
+    index, // 索引
+    isScrolling, // 是否正在滚动中
+    isVisible, // 是否在可视区域可见
+    style, // 指定每一行的位置 重点属性，一定要参加
+  }) => {
+
+    // 获取每一行的字母索引
+    const { cityIndex, cityList } = this.state
+    const letter = cityIndex[index]
+
+    return (
+      <div key={key} style={style} className="city">
+        <div className="title">{formatCityIndex(letter)}</div>
+        {cityList[letter].map(item => (
+          <div className="name" key={item.value}>
+            {item.label}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  // 创建动态计算每一行高度的方法
+  getRowHeight = ({ index }) => {
+    // 索引标题高度 + 城市数量 * 城市名称的高度
+    const { cityList, cityIndex } = this.state
+    return TITLE_HEIGHT + cityList[cityIndex[index]].length * NAME_HEIGHT
   }
 
   render() {
@@ -100,14 +141,19 @@ export default class CityList extends React.Component {
           城市选择
         </NavBar>
 
-        {/* 城市列表组件 */}
-        <List
-          width={300}
-          height={500}
-          rowCount={list.length}
-          rowHeight={50}
-          rowRenderer={rowRenderer}
-        />
+        {/* 城市列表结构 */}
+        <AutoSizer>
+          {/* 2. 修改 List 组件的 rowCount 为 cityIndex 数组的长度 */}
+          {({ width, height }) => (
+            <List
+              width={width}
+              height={height}
+              rowCount={this.state.cityIndex.length}
+              rowHeight={this.getRowHeight}
+              rowRenderer={this.rowRenderer}
+            />
+          )}
+        </AutoSizer>
       </div>
     )
   }

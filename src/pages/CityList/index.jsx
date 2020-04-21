@@ -1,7 +1,7 @@
 import React from 'react'
 
 // 导入 NavBar组件
-import { NavBar } from 'antd-mobile'
+import { NavBar, Toast } from 'antd-mobile'
 
 // 导入 axios
 import axios from 'axios'
@@ -59,14 +59,27 @@ const formatCityIndex = letter => {
   }
 }
 
+// 有房源的城市
+const HOUSE_CITY = ['北京', '上海', '广州', '深圳']
+
 export default class CityList extends React.Component {
-  state = {
-    cityList: {},
-    cityIndex: []
+  constructor() {
+    super()
+
+    this.state = {
+      cityList: {},
+      cityIndex: [],
+      // 指定右侧字母索引列表高亮的索引号
+      activeIndex: 0
+    }
+
+    this.cityListComponent = React.createRef()
   }
 
-  componentDidMount() {
-    this.getCityList()
+  async componentDidMount() {
+    await this.getCityList()
+
+    this.cityListComponent.current.measureAllRows()
   }
 
   // 获取城市列表数据的方法
@@ -113,7 +126,7 @@ export default class CityList extends React.Component {
       <div key={key} style={style} className="city">
         <div className="title">{formatCityIndex(letter)}</div>
         {cityList[letter].map(item => (
-          <div className="name" key={item.value}>
+          <div className="name" key={item.value} onClick={() => this.changeCity(item)}>
             {item.label}
           </div>
         ))}
@@ -126,6 +139,42 @@ export default class CityList extends React.Component {
     // 索引标题高度 + 城市数量 * 城市名称的高度
     const { cityList, cityIndex } = this.state
     return TITLE_HEIGHT + cityList[cityIndex[index]].length * NAME_HEIGHT
+  }
+
+  // 获取 list 列表行的信息
+  onRowsRendered = ({ startIndex }) => {
+    console.log(startIndex)
+    if (this.state.activeIndex !== startIndex) {
+      this.setState({
+        activeIndex: startIndex
+      })
+    }
+  }
+
+  // 封装渲染右侧索引列表的方法
+  renderCityIndex() {
+    const { cityIndex, activeIndex } = this.state
+    // 遍历 cityIndex，实现右侧列表的渲染
+    return cityIndex.map((item, index) => (
+      <li className="city-index-item" key={item} onClick={() => {
+        // console.log(index)
+        this.cityListComponent.current.scrollToRow(index)
+      }}>
+        {/* <span className="index-active">#</span> */}
+        <span className={activeIndex === index ? 'index-active' : ''}>{item === 'hot' ? '热' : item.toUpperCase()}</span>
+      </li>
+    ))
+  }
+
+  // 给城市列表项绑定点击事件。
+  changeCity({ label, value }) {
+    if (HOUSE_CITY.indexOf(label) > -1) {
+      // 有
+      localStorage.setItem('hkzf_city', JSON.stringify({ label, value }))
+      this.props.history.go(-1)
+    } else {
+      Toast.info('该城市暂无房源数据', 1, null, false)
+    }
   }
 
   render() {
@@ -146,14 +195,20 @@ export default class CityList extends React.Component {
           {/* 2. 修改 List 组件的 rowCount 为 cityIndex 数组的长度 */}
           {({ width, height }) => (
             <List
+              ref={this.cityListComponent}
               width={width}
               height={height}
               rowCount={this.state.cityIndex.length}
               rowHeight={this.getRowHeight}
               rowRenderer={this.rowRenderer}
+              onRowsRendered={this.onRowsRendered}
+              scrollToAlignment="start"
             />
           )}
         </AutoSizer>
+
+        {/* 右侧索引列表 */}
+        <ul className="city-index">{this.renderCityIndex()}</ul>
       </div>
     )
   }

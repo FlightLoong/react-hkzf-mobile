@@ -9,7 +9,13 @@ body {
 
 * {
   box-sizing: border-box;
-  touch-action: none;
+  /* touch-action: none; */
+  margin: 0px;
+  padding: 0px;
+}
+
+ul {
+  list-style: none;
 }
 
 html,

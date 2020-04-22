@@ -15,6 +15,9 @@ import './index.scss'
 // 导入 utils 中获取当前定位城市的方法
 import { getCurrentCity } from '../../utils'
 
+// 导入顶部导航组件
+import NavHeader from '../../components/NavHeader/index.jsx'
+
 // 数据格式化方法
 const formatCityData = list => {
   const cityList = {}
@@ -181,14 +184,7 @@ export default class CityList extends React.Component {
     return (
       <div className="citylist">
         {/* 顶部导航栏 */}
-        <NavBar
-          className="navbar"
-          mode="light"
-          icon={<i className="iconfont icon-back" />}
-          onLeftClick={() => this.props.history.go(-1)}
-        >
-          城市选择
-        </NavBar>
+        <NavHeader>城市选择</NavHeader>
 
         {/* 城市列表结构 */}
         <AutoSizer>

@@ -1,5 +1,8 @@
 import React from 'react'
 
+// 导入顶部导航组件
+import NavHeader from '../../components/NavHeader/index.jsx'
+
 // 导入样式
 import './index.scss'
 
@@ -18,6 +21,9 @@ export default class Map extends React.Component {
   render() {
     return (
       <div className="map">
+        {/* 顶部导航栏组件 */}
+        <NavHeader onLeftClick={() => this.props.history.go(-1)}>地图找房</NavHeader>
+        {/* 地图容器元素 */}
         <div id="container"></div>
       </div>
     )

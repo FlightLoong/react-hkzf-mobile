@@ -6,7 +6,8 @@ import { NavBar } from 'antd-mobile'
 
 import PropTypes from 'prop-types'
 
-import './index.scss'
+// import './index.scss'
+import styles from './index.module.css'
 
 function NavHeader({ children, history, onLeftClick }) {
 
@@ -17,7 +18,7 @@ function NavHeader({ children, history, onLeftClick }) {
     <div>
       {/* 顶部导航栏 */}
       <NavBar
-        className="navbar"
+        className={ styles.navbar }
         mode="light"
         icon={<i className="iconfont icon-back" />}
         onLeftClick={onLeftClick || defaultHandle}

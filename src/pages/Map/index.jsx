@@ -4,7 +4,8 @@ import React from 'react'
 import NavHeader from '../../components/NavHeader/index.jsx'
 
 // 导入样式
-import './index.scss'
+// import './index.scss'
+import styles from './index.module.css'
 
 export default class Map extends React.Component {
   componentDidMount() {
@@ -20,11 +21,11 @@ export default class Map extends React.Component {
 
   render() {
     return (
-      <div className="map">
+      <div className={styles.map}>
         {/* 顶部导航栏组件 */}
         <NavHeader onLeftClick={() => this.props.history.go(-1)}>地图找房</NavHeader>
         {/* 地图容器元素 */}
-        <div id="container"></div>
+        <div id="container" className={styles.container}></div>
       </div>
     )
   }

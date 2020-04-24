@@ -158,7 +158,25 @@ export default class Map extends React.Component {
   }
 
   // 创建覆盖物
-  createOverlays() { }
+  createOverlays(data, zoom, type) {
+    const {
+      coord: { longitude, latitude },
+      label: areaName,
+      count,
+      value
+    } = data
+
+    // 创建覆盖物
+    const areaPoint = new BMap.Point(longitude, latitude)
+
+    if (type === 'circle') {
+      // 区或镇
+      this.createCircle(areaPoint, areaName, count, value, zoom)
+    } else {
+      // 小区
+      this.createRect(areaPoint, areaName, count, value)
+    }
+  }
 
   // 创建区、镇覆盖物
   createCircle() { }

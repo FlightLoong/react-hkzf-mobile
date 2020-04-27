@@ -1,8 +1,15 @@
 import React from 'react'
 
-import axios from 'axios'
+// 导入axios
+// import axios from 'axios'
+import { API } from '../../utils/api.js'
 
 import { Link } from 'react-router-dom'
+
+import { Toast } from 'antd-mobile'
+
+// 导入 BASE_URL
+import { BASE_URL } from '../../utils/url.js'
 
 // 导入顶部导航组件
 import NavHeader from '../../components/NavHeader/index.jsx'
@@ -75,19 +82,25 @@ export default class Map extends React.Component {
 
   // 渲染覆盖物方法
   async renderOverlays(id) {
-    const { data: res } = await axios.get(`http://118.190.160.53:8009/area/map?id=${id}`)
+    try {
+      // 开启loading
+      Toast.loading('加载中...', 0, null, false)
+      const { data: res } = await API.get(`/area/map?id=${id}`)
+      // 关闭 loading
+      Toast.hide()
 
-    const data = res.body
+      const data = res.body
+      // 调用 getTypeAndZoom 方法获取级别和类型
+      const { nextZoom, type } = this.getTypeAndZoom()
 
-    // 调用 getTypeAndZoom 方法获取级别和类型
-    const { nextZoom, type } = this.getTypeAndZoom()
-
-    data.forEach(item => {
-      // console.log(item)
-      // console.log(nextZoom, type)
-      // 创建覆盖物
-      this.createOverlays(item, nextZoom, type)
-    })
+      data.forEach(item => {
+        // 创建覆盖物
+        this.createOverlays(item, nextZoom, type)
+      })
+    } catch (e) {
+      // 关闭 loading
+      Toast.hide()
+    }
   }
 
   // 计算要绘制的覆盖物类型和下一个缩放级别
@@ -225,12 +238,22 @@ export default class Map extends React.Component {
 
   // 获取小区房源数据
   async getHousesList(id) {
-    const res = await axios.get(`http://118.190.160.53:8009/houses?cityId=${id}`)
-    // console.log('小区的房源数据:', res)
-    this.setState({
-      housesList: res.data.body.list,
-      isShowList: true // 展示房源列表
-    })
+    try {
+      // 开启loading
+      Toast.loading('加载中...', 0, null, false)
+      const res = await API.get(`/houses?cityId=${id}`)
+
+      // 关闭 loading
+      Toast.hide()
+
+      this.setState({
+        housesList: res.data.body.list,
+        isShowList: true // 展示房源列表
+      })
+    } catch (e) {
+      // 关闭 loading
+      Toast.hide()
+    }
   }
 
   // 封装渲染房屋列表的方法
@@ -240,7 +263,7 @@ export default class Map extends React.Component {
         <div className={styles.imgWrap}>
           <img
             className={styles.img}
-            src={`http://118.190.160.53:8009${item.houseImg}`}
+            src={BASE_URL + item.houseImg}
             alt=""
           />
         </div>

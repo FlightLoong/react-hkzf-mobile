@@ -14,6 +14,8 @@ import './assets/fonts/iconfont.css'
 // 我们写的样式需要放到导入的样式库后面，这样才会生效，我们自己的样式才会覆盖样式库的样式
 import './index.css'
 
+// import './utils/url.js'
+
 import App from './App.jsx'
 
 ReactDOM.render(

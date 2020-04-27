@@ -9,7 +9,7 @@ body {
 
 * {
   box-sizing: border-box;
-  /* touch-action: none; */
+  touch-action: pan-y;
   margin: 0px;
   padding: 0px;
 }

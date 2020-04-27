@@ -3,8 +3,9 @@ import React from 'react'
 // 导入 NavBar组件
 import { NavBar, Toast } from 'antd-mobile'
 
-// 导入 axios
-import axios from 'axios'
+// 导入axios
+// import axios from 'axios'
+import { API } from '../../utils/api.js'
 
 // 导入 List 组件
 import { List, AutoSizer } from 'react-virtualized'
@@ -87,12 +88,12 @@ export default class CityList extends React.Component {
 
   // 获取城市列表数据的方法
   async getCityList() {
-    const { data: res } = await axios.get('http://118.190.160.53:8009/area/city?level=1')
+    const { data: res } = await API.get('/area/city?level=1')
 
     const { cityList, cityIndex } = formatCityData(res.body)
 
     // 处理城市列表数据
-    const hotRes = await axios.get('http://118.190.160.53:8009/area/hot')
+    const hotRes = await API.get('/area/hot')
     cityList['hot'] = hotRes.data.body
     cityIndex.unshift('hot')
 

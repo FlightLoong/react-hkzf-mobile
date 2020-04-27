@@ -4,7 +4,10 @@ import React from 'react'
 import { Carousel, WingBlank, Flex, Grid } from 'antd-mobile'
 
 // 导入axios
-import axios from 'axios'
+// import axios from 'axios'
+import { API } from '../../utils/api.js'
+// 导入 BASE_URL
+import { BASE_URL } from '../../utils/url.js'
 
 // 导入导航菜单图片
 import Nav1 from '../../assets/images/nav-1.png'
@@ -60,7 +63,7 @@ export default class Index extends React.Component {
 
   // 获取轮播图数据的方法
   async getSwipers() {
-    const res = await axios.get('http://118.190.160.53:8009/home/swiper')
+    const res = await API.get('/home/swiper')
     this.setState(() => {
       return {
         swipers: res.data.body
@@ -74,7 +77,7 @@ export default class Index extends React.Component {
 
   // 获取租房小组数据的方法
   async getGroups() {
-    const res = await axios.get('http://118.190.160.53:8009/home/groups', {
+    const res = await API.get('/home/groups', {
       params: {
         area: 'AREA%7C88cff55c-aaa4-e2e0'
       }
@@ -87,7 +90,7 @@ export default class Index extends React.Component {
 
   // 获取最新资讯
   async getNews() {
-    const res = await axios.get('http://118.190.160.53:8009/home/news?area=AREA%7C88cff55c-aaa4-e2e0')
+    const res = await API.get('/home/news?area=AREA%7C88cff55c-aaa4-e2e0')
 
     this.setState({
       news: res.data.body
@@ -132,7 +135,7 @@ export default class Index extends React.Component {
         }}
       >
         <img
-          src={'http://118.190.160.53:8009' + item.imgSrc}
+          src={BASE_URL + item.imgSrc}
           style={{ width: '100%', verticalAlign: 'top' }}
           alt=""
         />
@@ -160,7 +163,7 @@ export default class Index extends React.Component {
         <div className="imgwrap">
           <img
             className="img"
-            src={`http://118.190.160.53:8009${item.imgSrc}`}
+            src={BASE_URL + item.imgSrc}
             alt=""
           />
         </div>
@@ -235,7 +238,7 @@ export default class Index extends React.Component {
                   <p className="title">{item.title}</p>
                   <span className="info">{item.desc}</span>
                 </div>
-                <img src={`http://118.190.160.53:8009${item.imgSrc}`} alt="" />
+                <img src={BASE_URL + item.imgSrc} alt="" />
               </Flex>
             )}
           />

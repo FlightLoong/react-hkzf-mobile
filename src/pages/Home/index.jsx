@@ -2,6 +2,9 @@ import React from 'react'
 // 导入路由
 import { Route } from 'react-router-dom'
 
+// 导入 css 文件
+import './index.css'
+
 // 导入组件
 import News from '../News/index.jsx'
 import Index from '../Index/index.jsx'
@@ -10,9 +13,6 @@ import Profile from '../Profile/index.jsx'
 
 // 导入 antd 组件
 import { TabBar } from 'antd-mobile'
-
-// 导入 css 文件
-import './index.css'
 
 // TabBar 数据
 const tabItems = [

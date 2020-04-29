@@ -5,6 +5,7 @@ import  { Flex } from 'antd-mobile'
 
 // 导入顶部搜索栏组件
 import SearchHeader from '../../components/SearchHeader/index.jsx'
+import Filter from './components/Filter'
 
 // 导入样式文件
 import styles from './index.module.css'
@@ -20,6 +21,9 @@ export default class CityList extends React.Component {
           <i className="iconfont icon-back" onClick={ () => this.props.history.go(-1) } />
           <SearchHeader cityName={label} className={styles.searchHeader} />
         </Flex>
+
+        {/* 条件筛选栏 */}
+        <Filter />
       </div>
     )
   }

@@ -12,6 +12,7 @@ body {
   touch-action: pan-y;
   margin: 0px;
   padding: 0px;
+  touch-action: none;
 }
 
 ul {

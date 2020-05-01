@@ -181,16 +181,40 @@ export default class Filter extends Component {
     )
   }
 
+  // 渲染 FilterMore 组件的方法
+  renderFilterMore() {
+    const {
+      openType,
+      selectedValues,
+      filtersData: { roomType, oriented, floor, characteristic }
+    } = this.state
+
+    if (openType !== 'more') {
+      return null
+    }
+
+    const data = {
+      roomType,
+      oriented,
+      floor,
+      characteristic
+    }
+
+    const defaultValue = selectedValues.more
+
+    return <FilterMore data={data} type={openType} onCancel={this.onCancel} onSave={this.onSave} defaultValue={defaultValue} />
+  }
+
   render() {
     const { titleSelectedStatus, openType } = this.state
     return (
       <div className={styles.root}>
-        {/* 前三个菜单的遮罩层 */}
-        {
-          openType === 'area' || openType === 'mode' || openType === 'price' ? (
-            <div className={styles.mask} />
-          ) : null
-        }
+        {openType === 'area' || openType === 'mode' || openType === 'price' ? (
+          <div
+            className={styles.mask}
+            onClick={() => this.onCancel(openType)}
+          />
+        ) : null}
 
         <div className={styles.content}>
           {/* 标题栏 */}
@@ -200,7 +224,7 @@ export default class Filter extends Component {
           {this.renderFilterPicker()}
 
           {/* 最后一个菜单对应的内容： */}
-          {/* <FilterMore /> */}
+          {this.renderFilterMore()}
         </div>
       </div>
     )

@@ -84,8 +84,9 @@ export default class Filter extends Component {
       } else if (key === 'price' && selectedVal[0] !== 'null') {
         // 高亮
         newTitleSelectedStatus[key] = true
-      } else if (key === 'more') {
+      } else if (key === 'more' && selectedVal.length !== 0) {
         // 更多选择项 FilterMore 组件
+        newTitleSelectedStatus[key] = true
       } else {
         newTitleSelectedStatus[key] = false
       }
@@ -97,25 +98,39 @@ export default class Filter extends Component {
       // 使用新的标题选中状态对象来更新
       titleSelectedStatus: newTitleSelectedStatus
     })
-
-    // this.setState(prevState => {
-    //   return {
-    //     titleSelectedStatus: {
-    //       // 获取当前对象中所有属性的值
-    //       ...prevState.titleSelectedStatus,
-    //       [type]: true
-    //     },
-    //     // 展示对话框
-    //     openType: type
-    //   }
-    // })
   }
 
   // 取消或隐藏遮罩层
-  onCancel = () => {
+  onCancel = (type) => {
+    const { titleSelectedStatus, selectedValues } = this.state
+    // 创建新的标题选中状态对象
+    const newTitleSelectedStatus = { ...titleSelectedStatus }
+
+    // 菜单高亮逻辑处理
+    const selectedVal = selectedValues[type]
+    if (
+      type === 'area' &&
+      (selectedVal.length !== 2 || selectedVal[0] !== 'area')
+    ) {
+      // 高亮
+      newTitleSelectedStatus[type] = true
+    } else if (type === 'mode' && selectedVal[0] !== 'null') {
+      // 高亮
+      newTitleSelectedStatus[type] = true
+    } else if (type === 'price' && selectedVal[0] !== 'null') {
+      // 高亮
+      newTitleSelectedStatus[type] = true
+    } else if (type === 'more' && selectedVal.length !== 0) {
+      // 更多选择项 FilterMore 组件
+      newTitleSelectedStatus[type] = true
+    } else {
+      newTitleSelectedStatus[type] = false
+    }
     this.setState(() => {
       return {
-        openType: ''
+        openType: '',
+        // 更新菜单高亮状态数据
+        titleSelectedStatus: newTitleSelectedStatus
       }
     })
   }
@@ -123,8 +138,35 @@ export default class Filter extends Component {
   // 点确定按钮取消或隐藏遮罩层
   onSave = (type, value) => {
     console.log(type, value)
+    const { titleSelectedStatus } = this.state
+    // 创建新的标题选中状态对象
+    const newTitleSelectedStatus = { ...titleSelectedStatus }
+
+    // 菜单高亮逻辑处理
+    const selectedVal = value
+    if (
+      type === 'area' &&
+      (selectedVal.length !== 2 || selectedVal[0] !== 'area')
+    ) {
+      // 高亮
+      newTitleSelectedStatus[type] = true
+    } else if (type === 'mode' && selectedVal[0] !== 'null') {
+      // 高亮
+      newTitleSelectedStatus[type] = true
+    } else if (type === 'price' && selectedVal[0] !== 'null') {
+      // 高亮
+      newTitleSelectedStatus[type] = true
+    } else if (type === 'more' && selectedVal.length !== 0) {
+      // 更多选择项 FilterMore 组件
+      newTitleSelectedStatus[type] = true
+    } else {
+      newTitleSelectedStatus[type] = false
+    }
+
     this.setState({
       openType: '',
+      // 更新菜单高亮状态数据
+      titleSelectedStatus: newTitleSelectedStatus,
       selectedValues: {
         ...this.state.selectedValues,
         [type]: value

@@ -14,6 +14,9 @@ import { BASE_URL } from '../../utils/url.js'
 // 导入顶部导航组件
 import NavHeader from '../../components/NavHeader/index.jsx'
 
+// 导入 HouseItem 组件
+import HouseItem from '../../components/HouseItem'
+
 // 导入样式
 // import './index.scss'
 import styles from './index.module.css'
@@ -259,37 +262,47 @@ export default class Map extends React.Component {
   // 封装渲染房屋列表的方法
   renderHousesList() {
     return this.state.housesList.map(item => (
-      <div className={styles.house} key={item.houseCode}>
-        <div className={styles.imgWrap}>
-          <img
-            className={styles.img}
-            src={BASE_URL + item.houseImg}
-            alt=""
-          />
-        </div>
-        <div className={styles.content}>
-          <h3 className={styles.title}>{item.title}</h3>
-          <div className={styles.desc}>{item.desc}</div>
-          <div>
-            {/* ['近地铁', '随时看房'] */}
-            {item.tags.map((tag, index) => {
-              const tagClass = 'tag' + (index + 1)
-              return (
-                <span
-                  className={[styles.tag, styles[tagClass]].join(' ')}
-                  key={tag}
-                >
-                  {tag}
-                </span>
-              )
-            })}
-          </div>
-          <div className={styles.price}>
-            <span className={styles.priceNum}>{item.price}</span> 元/月
-          </div>
-        </div>
-      </div>
+      <HouseItem
+        key={item.houseCode}
+        src={BASE_URL + item.houseImg}
+        title={item.title}
+        desc={item.desc}
+        tags={item.tags}
+        price={item.price}
+      />
     ))
+    // return this.state.housesList.map(item => (
+    //   <div className={styles.house} key={item.houseCode}>
+    //     <div className={styles.imgWrap}>
+    //       <img
+    //         className={styles.img}
+    //         src={BASE_URL + item.houseImg}
+    //         alt=""
+    //       />
+    //     </div>
+    //     <div className={styles.content}>
+    //       <h3 className={styles.title}>{item.title}</h3>
+    //       <div className={styles.desc}>{item.desc}</div>
+    //       <div>
+    //         {/* ['近地铁', '随时看房'] */}
+    //         {item.tags.map((tag, index) => {
+    //           const tagClass = 'tag' + (index + 1)
+    //           return (
+    //             <span
+    //               className={[styles.tag, styles[tagClass]].join(' ')}
+    //               key={tag}
+    //             >
+    //               {tag}
+    //             </span>
+    //           )
+    //         })}
+    //       </div>
+    //       <div className={styles.price}>
+    //         <span className={styles.priceNum}>{item.price}</span> 元/月
+    //       </div>
+    //     </div>
+    //   </div>
+    // ))
   }
 
   render() {

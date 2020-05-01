@@ -137,7 +137,7 @@ export default class Filter extends Component {
 
   // 点确定按钮取消或隐藏遮罩层
   onSave = (type, value) => {
-    console.log(type, value)
+    // console.log(type, value)
     const { titleSelectedStatus } = this.state
     // 创建新的标题选中状态对象
     const newTitleSelectedStatus = { ...titleSelectedStatus }
@@ -163,14 +163,42 @@ export default class Filter extends Component {
       newTitleSelectedStatus[type] = false
     }
 
+    const newSelectedValues = {
+      ...this.state.selectedValues,
+      [type]: value
+    }
+
+    // 筛选条件数据
+    const filters = {}
+    // 解构筛选数据
+    const { area, mode, price, more } = newSelectedValues
+    // 取到区域关键字
+    const areaKey = area[0]
+    // 区域的值
+    let areaValue = 'null'
+    // 处理区域的取值
+    if (area.length === 3) {
+      areaValue = area[2] !== 'null' ? area[2] : area[1]
+    }
+    // 将处理好的区域数据添加到 filter 中
+    filters[areaKey] = areaValue
+
+    // 方式和租金
+    filters.mode = mode[0]
+    filters.price = price[0]
+
+    // 更多筛选条件 more
+    filters.more = more.join(',')
+
+    this.props.onFilter(filters)
+
+    // console.log(filters)
+
     this.setState({
       openType: '',
       // 更新菜单高亮状态数据
       titleSelectedStatus: newTitleSelectedStatus,
-      selectedValues: {
-        ...this.state.selectedValues,
-        [type]: value
-      }
+      selectedValues: newSelectedValues
     })
   }
 

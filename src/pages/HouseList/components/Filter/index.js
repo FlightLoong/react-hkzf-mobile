@@ -57,18 +57,58 @@ export default class Filter extends Component {
 
   // 点击标题菜单实现高亮
   onTitleClick = (type) => {
-    // console.log(type)
-    this.setState(prevState => {
-      return {
-        titleSelectedStatus: {
-          // 获取当前对象中所有属性的值
-          ...prevState.titleSelectedStatus,
-          [type]: true
-        },
-        // 展示对话框
-        openType: type
+    // 标题选中状态对象和筛选条件的选中值对象
+    const { titleSelectedStatus, selectedValues } = this.state
+    // 创建新的标题选中状态对象
+    const newTitleSelectedStatus = { ...titleSelectedStatus }
+
+    // 遍历标题选中状态对象
+
+    Object.keys(titleSelectedStatus).forEach(key => {
+      // key 表示数组中的每一项，此处，就是每个标题的 type 值。
+      console.log(key, type)
+      if (key === type) {
+        // 当前标题
+        newTitleSelectedStatus[type] = true
+        return
+      }
+
+      // 其他标题：
+      const selectedVal = selectedValues[key]
+      if (key === 'area' && (selectedVal.length !== 2 || selectedVal[0] !== 'area')) {
+        // 高亮
+        newTitleSelectedStatus[key] = true
+      } else if (key === 'mode' && selectedVal[0] !== 'null') {
+        // 高亮
+        newTitleSelectedStatus[key] = true
+      } else if (key === 'price' && selectedVal[0] !== 'null') {
+        // 高亮
+        newTitleSelectedStatus[key] = true
+      } else if (key === 'more') {
+        // 更多选择项 FilterMore 组件
+      } else {
+        newTitleSelectedStatus[key] = false
       }
     })
+
+    this.setState({
+      // 展示对话框
+      openType: type,
+      // 使用新的标题选中状态对象来更新
+      titleSelectedStatus: newTitleSelectedStatus
+    })
+
+    // this.setState(prevState => {
+    //   return {
+    //     titleSelectedStatus: {
+    //       // 获取当前对象中所有属性的值
+    //       ...prevState.titleSelectedStatus,
+    //       [type]: true
+    //     },
+    //     // 展示对话框
+    //     openType: type
+    //   }
+    // })
   }
 
   // 取消或隐藏遮罩层

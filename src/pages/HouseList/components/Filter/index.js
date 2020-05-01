@@ -13,10 +13,18 @@ import styles from './index.module.css'
 // 标题高亮状态
 // true 表示高亮； false 表示不高亮
 const titleSelectedStatus = {
-  area: true,
+  area: false,
   mode: false,
   price: false,
   more: false
+}
+
+// FilterPicker 和 FilterMore 组件的选中值
+const selectedValues = {
+  area: ['area', 'null'],
+  mode: ['null'],
+  price: ['null'],
+  more: []
 }
 
 export default class Filter extends Component {
@@ -25,7 +33,9 @@ export default class Filter extends Component {
     // 展示或隐藏的状态
     openType: '',
     // 所有筛选条件数据
-    filtersData: {}
+    filtersData: {},
+    // 筛选条件的选中值
+    selectedValues
   }
 
   componentDidMount() {
@@ -71,10 +81,13 @@ export default class Filter extends Component {
   }
 
   // 点确定按钮取消或隐藏遮罩层
-  onSave = () => {
-    this.setState(() => {
-      return {
-        openType: ''
+  onSave = (type, value) => {
+    console.log(type, value)
+    this.setState({
+      openType: '',
+      selectedValues: {
+        ...this.state.selectedValues,
+        [type]: value
       }
     })
   }
@@ -83,7 +96,8 @@ export default class Filter extends Component {
   renderFilterPicker() {
     const {
       openType,
-      filtersData: { area, subway, rentType, price }
+      filtersData: { area, subway, rentType, price },
+      selectedValues
     } = this.state
 
     if (openType !== 'area' && openType !== 'mode' && openType !== 'price') {
@@ -93,6 +107,7 @@ export default class Filter extends Component {
     // 根据 openType 来拿到当前筛选条件数据
     let data = []
     let cols = 3
+    let defaultValue = selectedValues[openType]
 
     switch (openType) {
       case 'area':
@@ -115,10 +130,13 @@ export default class Filter extends Component {
 
     return (
       <FilterPicker
+        key={openType}
         onCancel={this.onCancel}
         onSave={this.onSave}
         data={data}
         cols={cols}
+        type={openType}
+        defaultValue={defaultValue}
       />
     )
   }

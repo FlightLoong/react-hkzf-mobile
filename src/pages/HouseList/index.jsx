@@ -39,9 +39,9 @@ export default class HouseList extends React.Component {
   filters = {}
 
   async componentDidMount() {
-    // console.log('HouseList -> did mount')
+
     const { label, value } = await getCurrentCity()
-    console.log(label, value)
+
     this.setState({
       label,
       value

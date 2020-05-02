@@ -8,6 +8,10 @@ import Home from './pages/Home/index.jsx'
 import Map from './pages/Map/index.jsx'
 // 房源详情组件
 import HouseDetail from './pages/HouseDetail/index.jsx'
+// 登录
+import Login from './pages/Login'
+// 注册
+import Registe from './pages/Registe'
 
 function App() {
   return (
@@ -26,6 +30,8 @@ function App() {
 
         {/* 房源详情的路由规则： */}
         <Route path="/detail/:id" component={HouseDetail}></Route>
+        <Route path="/login" component={Login} />
+        <Route path="/registe" component={Registe} />
       </div>
     </Router>
   )

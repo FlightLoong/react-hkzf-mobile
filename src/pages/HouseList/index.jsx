@@ -1,7 +1,7 @@
 import React from 'react'
 
 // 导入 Flex 组件
-import { Flex } from 'antd-mobile'
+import { Flex, Toast } from 'antd-mobile'
 
 import { List, AutoSizer, WindowScroller, InfiniteLoader } from 'react-virtualized'
 
@@ -13,12 +13,14 @@ import SearchHeader from '../../components/SearchHeader/index.jsx'
 import Filter from './components/Filter'
 import HouseItem from '../../components/HouseItem'
 import Sticky from '../../components/Sticky'
+import NoHouse from '../../components/NoHouse'
 
 // 导入样式文件
 import styles from './index.module.css'
 
 // 获取当前定位城市信息
-const { label, value } = JSON.parse(localStorage.getItem('hkzf_city'))
+// const { label, value } = JSON.parse(localStorage.getItem('hkzf_city'))
+import { getCurrentCity } from '../../utils'
 
 export default class HouseList extends React.Component {
 
@@ -26,18 +28,33 @@ export default class HouseList extends React.Component {
     // 列表数据
     list: [],
     // 总条数
-    count: 0
+    count: 0,
+    // 数据是否加载中
+    isLoading: false,
+    label: '',
+    value: ''
   }
 
   // 初始化实例属性
   filters = {}
 
-  componentDidMount() {
+  async componentDidMount() {
+    // console.log('HouseList -> did mount')
+    const { label, value } = await getCurrentCity()
+    console.log(label, value)
+    this.setState({
+      label,
+      value
+    })
+
     // 调用 searchHouseList，来获取房屋列表数据
     this.searchHouseList()
   }
 
   onFilter = (filters) => {
+    // 返回页面顶部
+    window.scrollTo(0, 0)
+
     this.filters = filters
 
     // 调用获取房屋数据的方法
@@ -46,20 +63,35 @@ export default class HouseList extends React.Component {
 
   // 用来获取房屋列表数据
   async searchHouseList() {
+    // 获取当前定位城市id
+    this.setState({
+      isLoading: true
+    })
+
+    Toast.loading('加载中...', 0, null, false)
     const { data: res } = await API.get('/houses', {
       params: {
-        cityId: value,
+        cityId:  this.state.value,
         ...this.filters,
         start: 1,
         end: 20
       }
     })
-
     const { list, count } = res.body
+
+    // 关闭 loading
+    Toast.hide()
+    // 提示房源数量
+    if (count !== 0) {
+      Toast.info(`共找到${count}套房源`, 2, null, false)
+    }
+
     // 将获取到的房屋数据，存储到 state 中
     this.setState({
       list,
-      count
+      count,
+      // 数据加载完成的状态
+      isLoading: false
     })
   }
 
@@ -105,7 +137,7 @@ export default class HouseList extends React.Component {
     return new Promise(resolve => {
       API.get('/houses', {
         params: {
-          cityId: value,
+          cityId: this.state.value,
           ...this.filters,
           start: startIndex,
           end: stopIndex
@@ -122,50 +154,64 @@ export default class HouseList extends React.Component {
     })
   }
 
+  // 渲染房屋列表数据
+  renderList() {
+    const { count, isLoading } = this.state
+    // 关键点：在数据加载完成后，再进行 count 的判断
+    // 解决方式：如果数据加载中，则不展示 NoHouse 组件
+    // 但数据加载完成后，再展示 NoHouse 组件
+    if (count === 0 && !isLoading) {
+      return <NoHouse>没有找到房源，请您换个搜索条件吧~</NoHouse>
+    }
+
+    return (
+      <InfiniteLoader
+        isRowLoaded={this.isRowLoaded}
+        loadMoreRows={this.loadMoreRows}
+        rowCount={count}
+      >
+        {({ onRowsRendered, registerChild }) => (
+          <WindowScroller>
+            {({ height, isScrolling, scrollTop }) => (
+              <AutoSizer>
+                {({ width }) => (
+                  <List
+                    onRowsRendered={onRowsRendered}
+                    ref={registerChild}
+                    autoHeight // 设置高度为 WindowScroller 最终渲染的列表高度
+                    width={width} // 视口的宽度
+                    height={height} // 视口的高度
+                    rowCount={count} // List列表项的行数
+                    rowHeight={120} // 每一行的高度
+                    rowRenderer={this.renderHouseList} // 渲染列表项中的每一行
+                    isScrolling={isScrolling}
+                    scrollTop={scrollTop}
+                  />
+                )}
+              </AutoSizer>
+            )}
+          </WindowScroller>
+        )}
+      </InfiniteLoader>
+    )
+  }
+
   render() {
-    const { count } = this.state
     return (
       <div>
         <Flex className={styles.header}>
           <i className="iconfont icon-back" onClick={() => this.props.history.go(-1)} />
-          <SearchHeader cityName={label} className={styles.searchHeader} />
+          <SearchHeader cityName={this.state.label} className={styles.searchHeader} />
         </Flex>
 
         {/* 条件筛选栏 */}
-        <Sticky height={ 40 }>
+        <Sticky height={40}>
           <Filter onFilter={this.onFilter} />
         </Sticky>
 
         {/* 房屋列表 */}
         <div className={styles.houseItems}>
-          <InfiniteLoader
-            isRowLoaded={this.isRowLoaded}
-            loadMoreRows={this.loadMoreRows}
-            rowCount={count}
-          >
-            {({ onRowsRendered, registerChild }) => (
-              <WindowScroller>
-                {({ height, isScrolling, scrollTop }) => (
-                  <AutoSizer>
-                    {({ width }) => (
-                      <List
-                        onRowsRendered={onRowsRendered}
-                        ref={registerChild}
-                        autoHeight // 设置高度为 WindowScroller 最终渲染的列表高度
-                        width={width} // 视口的宽度
-                        height={height} // 视口的高度
-                        rowCount={count} // List列表项的行数
-                        rowHeight={120} // 每一行的高度
-                        rowRenderer={this.renderHouseList} // 渲染列表项中的每一行
-                        isScrolling={isScrolling}
-                        scrollTop={scrollTop}
-                      />
-                    )}
-                  </AutoSizer>
-                )}
-              </WindowScroller>
-            )}
-          </InfiniteLoader>
+          {this.renderList()}
         </div>
       </div>
     )

@@ -39,6 +39,8 @@ export default class Filter extends Component {
   }
 
   componentDidMount() {
+    // 获取到 body
+    this.htmlBody = document.body
     this.getFiltersData()
   }
 
@@ -57,6 +59,9 @@ export default class Filter extends Component {
 
   // 点击标题菜单实现高亮
   onTitleClick = (type) => {
+    // 给 body 添加样式
+    this.htmlBody.className = 'body-fixed'
+    
     // 标题选中状态对象和筛选条件的选中值对象
     const { titleSelectedStatus, selectedValues } = this.state
     // 创建新的标题选中状态对象

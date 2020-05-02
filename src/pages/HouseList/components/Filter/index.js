@@ -3,6 +3,9 @@ import React, { Component } from 'react'
 // 导入自定义的axios
 import { API } from '../../../../utils/api'
 
+// 导入 react-spring 动画库组件
+import { Spring } from 'react-spring/renderprops'
+
 // 导入组件
 import FilterTitle from '../FilterTitle'
 import FilterPicker from '../FilterPicker'
@@ -61,7 +64,7 @@ export default class Filter extends Component {
   onTitleClick = (type) => {
     // 给 body 添加样式
     this.htmlBody.className = 'body-fixed'
-    
+
     // 标题选中状态对象和筛选条件的选中值对象
     const { titleSelectedStatus, selectedValues } = this.state
     // 创建新的标题选中状态对象
@@ -280,16 +283,57 @@ export default class Filter extends Component {
     return <FilterMore data={data} type={openType} onCancel={this.onCancel} onSave={this.onSave} defaultValue={defaultValue} />
   }
 
+  // 渲染遮罩层div
+  renderMask() {
+    const { openType } = this.state
+
+    const isHide = openType === 'more' || openType == ''
+
+    return (
+      <Spring from={{ opacity: 0 }} to={{ opacity: isHide ? 0 : 1 }}>
+        {
+          props => {
+            // opacity 等于 0 ，说明遮罩层动画完成已经隐藏
+            if (props.opacity === 0) {
+              return null
+            }
+
+            return (
+              <div
+                style={props}
+                className={styles.mask}
+                onClick={() => this.onCancel(openType)}
+              />
+            )
+          }
+        }
+      </Spring>
+    )
+
+    // if (openType === 'more' || openType === '') {
+    //   return null
+    // }
+
+    // return (
+    //   <Spring from={{ opacity: 0 }} to={{ opacity: 1 }}>
+    //     {
+    //       props => (
+    //         <div
+    //           style={props}
+    //           className={styles.mask}
+    //           onClick={() => this.onCancel(openType)}
+    //         />
+    //       )
+    //     }
+    //   </Spring>
+    // )
+  }
+
   render() {
-    const { titleSelectedStatus, openType } = this.state
+    const { titleSelectedStatus } = this.state
     return (
       <div className={styles.root}>
-        {openType === 'area' || openType === 'mode' || openType === 'price' ? (
-          <div
-            className={styles.mask}
-            onClick={() => this.onCancel(openType)}
-          />
-        ) : null}
+        {this.renderMask()}
 
         <div className={styles.content}>
           {/* 标题栏 */}

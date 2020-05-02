@@ -6,6 +6,8 @@ import { BrowserRouter as Router, Route, Link, Redirect } from 'react-router-dom
 import CityList from './pages/CityList/index.jsx'
 import Home from './pages/Home/index.jsx'
 import Map from './pages/Map/index.jsx'
+// 房源详情组件
+import HouseDetail from './pages/HouseDetail/index.jsx'
 
 function App() {
   return (
@@ -13,14 +15,17 @@ function App() {
       <div className="App">
 
         {/* 第一种：路由重定向的方式 */}
-        <Redirect from="/" to="/home" />
+        {/* <Redirect from="/" to="/home" /> */}
 
         {/* 第二种：路由重定向的方式 */}
-        {/* <Route exact path="/" render={() => <Redirect to="/home" />}></Route> */}
-        
+        <Route exact path="/" render={() => <Redirect to="/home" />}></Route>
+
         <Route path="/home" component={Home}></Route>
         <Route path="/citylist" component={CityList}></Route>
         <Route path="/map" component={Map}></Route>
+
+        {/* 房源详情的路由规则： */}
+        <Route path="/detail/:id" component={HouseDetail}></Route>
       </div>
     </Router>
   )

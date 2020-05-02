@@ -186,9 +186,9 @@ export default class Index extends React.Component {
       <div className="index">
         {/* 轮播图 */}
         <div className="swiper">
-          {/* <Carousel infinite autoplay={this.state.IndexFlag} Interval={3000}>
+          <Carousel infinite autoplay={this.state.IndexFlag} Interval={3000}>
             {this.renderSwipers()}
-          </Carousel> */}
+          </Carousel>
 
           {/* 搜索框 */}
           <SearchHeader cityName={ this.state.curCityName }></SearchHeader>

@@ -1,68 +1,22 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+#### 好客租房项目简介
+---
 
-## Available Scripts
+1. 技术亮点
+   - 前后端分离的开发模式，后端数据接口服务由 `NodeJS` 开发，并通过 `CORS` 解决了前端跨域的问题
+   - 在登录功能中，采用了目前流行的 `JWT`（非传统的 `cookie` + `session` ），实现了登录状态保持
+   - 数据库采用 `MySql`，能够使用 `NodeJS` 就能完美的操作 `MySql` 数据库
+   - 前端使用了最流行的框架 `React` 技术栈（全家桶），借助于 `React` 官方脚手架 `crreate-react-app` 进行项目开发
+   - 配合第三方组件库 `antd-mobile` 实现页面布局，并提供了基础组件，项目中基于这些基础组件进行再次封装，来满足项目开发需求
 
-In the project directory, you can run:
 
-### `yarn start`
-
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+2. 技术解决方案
+   - 采用阿里旗下的 `antd-mobile` 组件库快速开发页面
+   - 采用 `react-router-dom` 轻松实现 `SPA` 单页应用程序
+   - 采用 `react-virtualized` 组件实现移动端长列表性能优化，保证加载大数据列表时用户使用流畅度
+   - 采用 `formik+yup` 实现大型项目中复杂表单的处理
+   - 采用 `react-spring` 轻松实现 `React` 动画效果，增加用户体验
+   - 采用 `CSS Modules` 技术实现 `CSS` 模块化管理，避免组件间的样式冲突
+   - 使用百度地图 `API` 实现可视化找房功能
+   - 基于 `RESTful` 风格的数据 `API` 解决方案
+   - 采用 `Swagger` 实现 `API` 文档
+   - 使用 `JWT` 技术实现登录状态保持

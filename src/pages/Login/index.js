@@ -5,13 +5,18 @@ import { Link } from 'react-router-dom'
 
 import { API } from '../../utils/api.js'
 
+// 导入 withFormik
+import { withFormik, Form, Field, ErrorMessage } from 'formik'
+
+import * as Yup from 'yup'
+
 import NavHeader from '../../components/NavHeader'
 
 import styles from './index.module.css'
 
 // 验证规则：
-// const REG_UNAME = /^[a-zA-Z_\d]{5,8}$/
-// const REG_PWD = /^[a-zA-Z_\d]{5,12}$/
+const REG_UNAME = /^[a-zA-Z_\d]{5,8}$/
+const REG_PWD = /^[a-zA-Z_\d]{5,12}$/
 
 class Login extends Component {
   state = {
@@ -45,7 +50,7 @@ class Login extends Component {
       password
     })
 
-    console.log('登录结果：', res)
+    // console.log('登录结果：', res)
     const { status, body, description } = res
 
     if (status === 200) {
@@ -60,6 +65,10 @@ class Login extends Component {
 
   render() {
     const { username, password } = this.state
+    // 通过 props 获取高阶组件传递进来的属性
+    // const { values, handleSubmit, handleChange, handleBlur, errors, touched } = this.props
+    // console.log(errors, touched)
+
     return (
       <div className={styles.root}>
         {/* 顶部导航 */}
@@ -68,27 +77,33 @@ class Login extends Component {
 
         {/* 登录表单 */}
         <WingBlank>
-          <form onSubmit={this.handleSubmit}>
+          <Form>
             <div className={styles.formItem}>
-              <input
+              <Field
+                type="text"
                 className={styles.input}
-                value={username}
-                onChange={this.getUserName}
                 name="username"
                 placeholder="请输入账号"
               />
             </div>
+            <ErrorMessage className={styles.error} name="username" component="div"></ErrorMessage>
+            {/* {errors.username && touched.username && (
+              <div className={styles.error}>{errors.username}</div>
+            )} */}
             {/* 长度为5到8位，只能出现数字、字母、下划线 */}
             {/* <div className={styles.error}>账号为必填项</div> */}
             <div className={styles.formItem}>
-              <input
+              <Field
+                type="possword"
                 className={styles.input}
-                value={password}
-                onChange={this.getPassword}
                 name="password"
                 placeholder="请输入密码"
               />
             </div>
+            <ErrorMessage className={styles.error} name="password" component="div"></ErrorMessage>
+            {/* {errors.password && touched.password && (
+              <div className={styles.error}>{errors.password}</div>
+            )} */}
             {/* 长度为5到12位，只能出现数字、字母、下划线 */}
             {/* <div className={styles.error}>账号为必填项</div> */}
             <div className={styles.formSubmit}>
@@ -96,7 +111,7 @@ class Login extends Component {
                 登 录
               </button>
             </div>
-          </form>
+          </Form>
           <Flex className={styles.backHome}>
             <Flex.Item>
               <Link to="/registe">还没有账号，去注册~</Link>
@@ -108,4 +123,40 @@ class Login extends Component {
   }
 }
 
+// 使用 withFormik 高阶组件包装 Login 组件
+// 为 Login 组件提供属性和方法
+Login = withFormik({
+  // 提供状态
+  mapPropsToValues: () => ({ username: '', password: '' }),
+  // 添加表单校验规则
+  validationSchema: Yup.object().shape({
+    username: Yup.string().required('账号为必填项').matches(REG_UNAME, '长度为5到8位，只能出现数字、字母、下划线'),
+    password: Yup.string().required('密码为必填项').matches(REG_PWD, '长度为5到12位，只能出现数字、字母、下划线')
+  }),
+  // 表单的提交事件
+  handleSubmit: async (values, { props }) => {
+    // console.log(values)
+    // 获取账号和密码
+    const { username, password } = values
+    // 发送请求
+    const { data: res } = await API.post('/user/login', {
+      username,
+      password
+    })
+
+    // console.log('登录结果：', res)
+    const { status, body, description } = res
+
+    if (status === 200) {
+      // 登录成功
+      localStorage.setItem('hkzf_token', body.token)
+      props.history.go(-1)
+    } else {
+      // 登录失败
+      Toast.info(description, 2, null, false)
+    }
+  }
+})(Login)
+
+// 此处返回的是 高阶组件 包装后的组件
 export default Login

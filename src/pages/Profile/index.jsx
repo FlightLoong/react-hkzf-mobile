@@ -1,16 +1,17 @@
 import React, { Component } from 'react'
 
 import { Link } from 'react-router-dom'
-import { Grid, Button } from 'antd-mobile'
+import { Grid, Button, Modal } from 'antd-mobile'
 
 import { BASE_URL } from '../../utils/url.js'
 import { API } from '../../utils/api.js'
-import { isAuth, getToken } from '../../utils/auth.js'
+import { isAuth, getToken, removeToken } from '../../utils/auth.js'
 
 import styles from './index.module.css'
 
 // 默认头像
 const DEFAULT_AVATAR = BASE_URL + '/img/profile/avatar.png'
+const alert = Modal.alert
 
 // 菜单数据
 const menus = [
@@ -39,11 +40,41 @@ export default class Profile extends Component {
     this.getUserInfo()
   }
 
+  // 退出
+  logout = () => {
+    alert('提示', '是否确定退出?', [
+      { text: '取消' },
+      {
+        text: '退出',
+        onPress: async () => {
+          // 调用退出的接口
+          await API.post('/user/logout', null, {
+            headers: {
+              authorization: getToken()
+            }
+          })
+
+          // 移除本地token
+          removeToken()
+
+          // 处理状态
+          this.setState({
+            isLogin: false,
+            userInfo: {
+              avatar: '',
+              nickname: ''
+            }
+          })
+        }
+      }
+    ])
+  }
+
   async getUserInfo() {
     if (!this.state.isLogin) {
       return
     }
-    
+
     const { data: res } = await API.get('/user', {
       headers: {
         authorization: getToken()

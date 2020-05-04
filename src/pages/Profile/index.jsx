@@ -4,8 +4,13 @@ import { Link } from 'react-router-dom'
 import { Grid, Button } from 'antd-mobile'
 
 import { BASE_URL } from '../../utils/url.js'
+import { API } from '../../utils/api.js'
+import { isAuth, getToken } from '../../utils/auth.js'
 
 import styles from './index.module.css'
+
+// 默认头像
+const DEFAULT_AVATAR = BASE_URL + '/img/profile/avatar.png'
 
 // 菜单数据
 const menus = [
@@ -22,20 +27,44 @@ const menus = [
 ]
 
 export default class Profile extends Component {
-  avatarEditor = React.createRef()
-
   state = {
+    isLogin: isAuth(),
     userInfo: {
-      nickname: '' || '游客',
-      avatar: '' || BASE_URL + '/img/profile/avatar.png'
+      avatar: '',
+      nickname: ''
+    }
+  }
+
+  componentDidMount() {
+    this.getUserInfo()
+  }
+
+  async getUserInfo() {
+    if (!this.state.isLogin) {
+      return
+    }
+    
+    const { data: res } = await API.get('/user', {
+      headers: {
+        authorization: getToken()
+      }
+    })
+
+    if (res.status === 200) {
+      const { avatar, nickname } = res.body
+      this.setState({
+        userInfo: {
+          avatar: avatar === null ? DEFAULT_AVATAR : BASE_URL + avatar,
+          nickname
+        }
+      })
     }
   }
 
   render() {
-    const {
-      userInfo: { nickname, avatar }
-    } = this.state
     const { history } = this.props
+
+    const { isLogin, userInfo: { avatar, nickname } } = this.state
 
     return (
       <div className={styles.root}>
@@ -48,34 +77,36 @@ export default class Profile extends Component {
           />
           <div className={styles.info}>
             <div className={styles.myIcon}>
-              <img className={styles.avatar} src={avatar} alt="icon" />
+              <img className={styles.avatar} src={avatar || DEFAULT_AVATAR} alt="icon" />
             </div>
             <div className={styles.user}>
               <div className={styles.name}>{nickname || '游客'}</div>
               {/* 登录后展示： */}
-              {/* <>
-                <div className={styles.auth}>
-                  <span onClick={this.logout}>退出</span>
-                </div>
-                <div className={styles.edit}>
-                  编辑个人资料
-                  <span className={styles.arrow}>
-                    <i className="iconfont icon-arrow" />
-                  </span>
-                </div>
-              </> */}
-
               {/* 未登录展示： */}
-              <div className={styles.edit}>
-                <Button
-                  type="primary"
-                  size="small"
-                  inline
-                  onClick={() => history.push('/login')}
-                >
-                  去登录
-                </Button>
-              </div>
+              {isLogin ? (
+                <>
+                  <div className={styles.auth}>
+                    <span onClick={this.logout}>退出</span>
+                  </div>
+                  <div className={styles.edit}>
+                    编辑个人资料
+                    <span className={styles.arrow}>
+                      <i className="iconfont icon-arrow" />
+                    </span>
+                  </div>
+                </>
+              ) : (
+                  <div className={styles.edit}>
+                    <Button
+                      type="primary"
+                      size="small"
+                      inline
+                      onClick={() => history.push('/login')}
+                    >
+                      去登录
+                  </Button>
+                  </div>
+                )}
             </div>
           </div>
         </div>
@@ -94,11 +125,11 @@ export default class Profile extends Component {
                 </div>
               </Link>
             ) : (
-              <div className={styles.menuItem}>
-                <i className={`iconfont ${item.iconfont}`} />
-                <span>{item.name}</span>
-              </div>
-            )
+                <div className={styles.menuItem}>
+                  <i className={`iconfont ${item.iconfont}`} />
+                  <span>{item.name}</span>
+                </div>
+              )
           }
         />
 

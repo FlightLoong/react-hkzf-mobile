@@ -75,11 +75,7 @@ export default class Profile extends Component {
       return
     }
 
-    const { data: res } = await API.get('/user', {
-      headers: {
-        authorization: getToken()
-      }
-    })
+    const { data: res } = await API.get('/user')
 
     if (res.status === 200) {
       const { avatar, nickname } = res.body
@@ -88,6 +84,10 @@ export default class Profile extends Component {
           avatar: avatar === null ? DEFAULT_AVATAR : BASE_URL + avatar,
           nickname
         }
+      })
+    } else {
+      this.setState({
+        isLogin: false
       })
     }
   }

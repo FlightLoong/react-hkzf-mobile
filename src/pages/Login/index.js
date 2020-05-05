@@ -133,6 +133,7 @@ Login = withFormik({
     username: Yup.string().required('账号为必填项').matches(REG_UNAME, '长度为5到8位，只能出现数字、字母、下划线'),
     password: Yup.string().required('密码为必填项').matches(REG_PWD, '长度为5到12位，只能出现数字、字母、下划线')
   }),
+
   // 表单的提交事件
   handleSubmit: async (values, { props }) => {
     // console.log(values)
@@ -150,7 +151,19 @@ Login = withFormik({
     if (status === 200) {
       // 登录成功
       localStorage.setItem('hkzf_token', body.token)
-      props.history.go(-1)
+
+      if (!props.location.state) {
+        // 直接进入到了该页面，调用 go(-1) 返回上一级路由
+        props.history.go(-1)
+      } else {
+        // push：[home, login, map]
+        // replace: [home, map]
+        // props.history.push(props.location.state.from.pathname)
+
+        // 使用 replace 方法替换 push 方法，这样返回上一页，不会再次跳转到 login 页面
+        props.history.replace(props.location.state.from.pathname)
+      }
+      // props.history.go(-1)
     } else {
       // 登录失败
       Toast.info(description, 2, null, false)

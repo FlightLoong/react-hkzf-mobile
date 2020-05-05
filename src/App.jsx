@@ -12,6 +12,8 @@ import HouseDetail from './pages/HouseDetail/index.jsx'
 import Login from './pages/Login'
 // 注册
 import Registe from './pages/Registe'
+// 导入鉴权组件
+// import AuthRoute from './components/AuthRoute/index.jsx'
 
 function App() {
   return (

@@ -38,11 +38,11 @@
   font-size: 14px;
 }
 
-.item {
+.tip {
   padding-left: 2px;
   border-bottom: 1px solid #f1f1f1;
 }
 
-.item:last-child {
+.tip:last-child {
   border-bottom: 0;
 }

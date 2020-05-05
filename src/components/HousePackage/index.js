@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 
+// import PropTypes from 'prop-types'
+
 import styles from './index.module.css'
 
 // 所有房屋配置项
@@ -131,4 +133,9 @@ export default class HousePackage extends Component {
   render() {
     return <ul className={styles.root}>{this.renderItems()}</ul>
   }
+}
+
+// 属性默认值，防止在使用该组件时，不传 onSelect 报错
+HousePackage.defaultProps = {
+  onSelect: () => { }
 }

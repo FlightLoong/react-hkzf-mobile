@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import { SearchBar } from 'antd-mobile'
 
-import { getCity } from '../../../utils'
+import { getCity } from '../../../utils/city'
 
 import styles from './index.module.css'
 

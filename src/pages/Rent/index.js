@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 
 import { Link } from 'react-router-dom'
 
-import { API, BASE_URL } from '../../utils'
+import { API } from '../../utils/api'
+import { BASE_URL } from '../../utils/url'
 
 import NavHeader from '../../components/NavHeader'
 import HouseItem from '../../components/HouseItem'

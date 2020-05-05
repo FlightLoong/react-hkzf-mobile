@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { lazy } from 'react'
 // 导入路由
 import { Route } from 'react-router-dom'
 
@@ -6,13 +6,19 @@ import { Route } from 'react-router-dom'
 import './index.css'
 
 // 导入组件
-import News from '../News/index.jsx'
-import Index from '../Index/index.jsx'
-import HouseList from '../HouseList/index.jsx'
-import Profile from '../Profile/index.jsx'
 
+// import News from '../News/index.jsx'
+// import Index from '../Index/index.jsx'
+// import HouseList from '../HouseList/index.jsx'
+// import Profile from '../Profile/index.jsx'
+// const { CityList } = lazy(() => import('./pages/CityList/index.jsx'))
+import Index from '../Index/index.jsx'
 // 导入 antd 组件
 import { TabBar } from 'antd-mobile'
+
+const News = lazy(() => import('../News/index.jsx'))
+const HouseList = lazy(() => import('../HouseList/index.jsx'))
+const Profile = lazy(() => import('../Profile/index.jsx'))
 
 // TabBar 数据
 const tabItems = [

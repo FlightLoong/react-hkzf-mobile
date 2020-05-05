@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { Carousel, Flex } from 'antd-mobile'
+import { Carousel, Flex, Modal, Toast } from 'antd-mobile'
 
 import NavHeader from '../../components/NavHeader'
 import HouseItem from '../../components/HouseItem'
@@ -11,6 +11,8 @@ import { BASE_URL } from '../../utils/url'
 import { isAuth } from '../../utils/auth'
 
 import styles from './index.module.css'
+
+const alert = Modal.alert
 
 // 猜你喜欢
 const recommendHouses = [
@@ -98,6 +100,7 @@ export default class HouseDetail extends Component {
     isFavorite: false
   }
 
+  // 检查房源是否收藏了
   async checkFavorite() {
     // 判断是否登录
     const isLogin = isAuth()
@@ -119,6 +122,59 @@ export default class HouseDetail extends Component {
     }
   }
 
+  // 点击实现收藏功能
+  handleFavorite = async () => {
+    // 检查登录状态
+    const isLogin = isAuth()
+    const { history, location, match } = this.props
+
+    if (!isLogin) {
+      return alert('提示', '登录后才能收藏房源，是否去登录?', [
+        { text: '取消' },
+        {
+          text: '去登录',
+          onPress: () => history.push('/login', { from: location })
+        }
+      ])
+    }
+
+    // 已登录
+    const { isFavorite } = this.state
+    const { id } = match.params
+
+    if (isFavorite) {
+      // 已收藏，应该删除收藏
+      const res = await API.delete(`/user/favorites/${id}`)
+      // console.log(res)
+      this.setState({
+        isFavorite: false
+      })
+
+      if (res.data.status === 200) {
+        // 提示用户取消收藏
+        Toast.info('已取消收藏', 1, null, false)
+      } else {
+        // token 超时
+        Toast.info('登录超时，请重新登录', 2, null, false)
+      }
+    } else {
+      // 未收藏，应该添加收藏
+      const res = await API.post(`/user/favorites/${id}`)
+      // console.log(res)
+      if (res.data.status === 200) {
+        // 提示用户收藏成功
+        Toast.info('已收藏', 1, null, false)
+        this.setState({
+          isFavorite: true
+        })
+      } else {
+        // token 超时
+        Toast.info('登录超时，请重新登录', 2, null, false)
+      }
+    }
+  }
+
+  // 获取商品详情数据
   async getHouseDetail() {
     // 通过路由参数获取到当前房屋 id
     const { id } = this.props.match.params
@@ -360,7 +416,7 @@ export default class HouseDetail extends Component {
 
         {/* 底部收藏按钮 */}
         <Flex className={styles.fixedBottom}>
-          <Flex.Item>
+          <Flex.Item onClick={this.handleFavorite}>
             <img
               src={BASE_URL + (isFavorite ? '/img/star.png' : '/img/unstar.png')}
               className={styles.favoriteImg}
